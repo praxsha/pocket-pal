@@ -1,88 +1,73 @@
 let friendship = 0;
+
 let hunger = 100;
 let happiness = 100;
 let energy = 100;
 
-const dialogue = document.getElementById("dialogue");
 const friendshipText = document.getElementById("friendship");
+const dialogue = document.getElementById("dialogue");
 
-const container = document.querySelector(".container");
+const hungerBar = document.getElementById("hungerBar");
+const happyBar = document.getElementById("happyBar");
+const energyBar = document.getElementById("energyBar");
 
-const progressHTML = `
-<p style="margin-top:15px;">Friendship Progress</p>
+function updateBars() {
+    hungerBar.value = hunger;
+    happyBar.value = happiness;
+    energyBar.value = energy;
 
-<div class="progress">
-    <div class="progress-bar" id="progressBar"></div>
-</div>
-
-<h3 id="rank">🌱 Stranger</h3>
-`;
-
-container.insertAdjacentHTML("beforeend", progressHTML);
-
-const progressBar = document.getElementById("progressBar");
-const rank = document.getElementById("rank");
-
-function updateUI(){
-
-    friendshipText.textContent = friendship;
-
-    let percent = friendship;
-
-    if(percent>100){
-        percent=100;
+    if (hunger < 25) {
+        dialogue.innerHTML = "🍔 I'm hungry...";
+    } else if (energy < 25) {
+        dialogue.innerHTML = "😴 I'm sleepy...";
+    } else if (happiness < 25) {
+        dialogue.innerHTML = "😢 I need attention...";
     }
-
-    progressBar.style.width = percent + "%";
-
-    if(friendship<25){
-
-        rank.textContent="🌱 Stranger";
-
-    }else if(friendship<50){
-
-        rank.textContent="😊 Friend";
-
-    }else if(friendship<75){
-
-        rank.textContent="💖 Best Friend";
-
-    }else{
-
-        rank.textContent="💍 Soulmate";
-
-    }
-
 }
 
-function feedPet(){
+function feedPet() {
 
     friendship += 5;
+    hunger = Math.min(hunger + 20, 100);
+    happiness = Math.min(happiness + 5, 100);
 
-    dialogue.textContent="🍎 Mochi enjoyed the food!";
+    friendshipText.innerHTML = friendship;
+    dialogue.innerHTML = "Yummy! Thank you! 😋";
 
-    updateUI();
-
+    updateBars();
 }
 
-function playPet(){
+function playPet() {
 
     friendship += 10;
+    happiness = Math.min(happiness + 15, 100);
+    energy = Math.max(energy - 10, 0);
 
-    dialogue.textContent="🎾 Mochi is having lots of fun!";
+    friendshipText.innerHTML = friendship;
+    dialogue.innerHTML = "That was so much fun! 🎾";
 
-    updateUI();
-
+    updateBars();
 }
 
-function petPet(){
+function petPet() {
 
     friendship += 3;
+    happiness = Math.min(happiness + 10, 100);
 
-    dialogue.textContent="🥰 Purr... Mochi loves your cuddles!";
+    friendshipText.innerHTML = friendship;
+    dialogue.innerHTML = "Purrrrr ❤️";
 
-    updateUI();
-
+    updateBars();
 }
 
-updateUI();
+setInterval(() => {
+
+    hunger = Math.max(hunger - 2, 0);
+    happiness = Math.max(happiness - 1, 0);
+    energy = Math.max(energy - 1, 0);
+
+    updateBars();
+
+}, 5000);
+
+updateBars();
