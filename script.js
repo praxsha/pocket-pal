@@ -3,9 +3,11 @@ let hunger = Number(localStorage.getItem("hunger")) || 100;
 let happiness = Number(localStorage.getItem("happiness")) || 100;
 let energy = Number(localStorage.getItem("energy")) || 100;
 let level = Number(localStorage.getItem("level")) || 1;
+let coins = Number(localStorage.getItem("coins")) || 0;
 
 const friendshipText = document.getElementById("friendship");
 const levelText = document.getElementById("level");
+const coinText = document.getElementById("coins");
 const dialogue = document.getElementById("dialogue");
 
 const hungerBar = document.getElementById("hungerBar");
@@ -18,82 +20,105 @@ function saveGame() {
     localStorage.setItem("happiness", happiness);
     localStorage.setItem("energy", energy);
     localStorage.setItem("level", level);
+    localStorage.setItem("coins", coins);
 }
 
 function checkLevel() {
-    const newLevel = Math.floor(friendship / 100) + 1;
+    let newLevel = Math.floor(friendship / 100) + 1;
 
     if (newLevel > level) {
         level = newLevel;
-        dialogue.textContent = "🎉 Level Up! Mochi is now Level " + level + "!";
-        document.getElementById("pet").style.transform = "scale(1.2)";
-
-        setTimeout(() => {
-            document.getElementById("pet").style.transform = "scale(1)";
-        }, 300);
+        dialogue.textContent = "🎉 Level Up! Mochi reached Level " + level + "!";
     }
 }
 
-function updateBars() {
+function updateGame() {
 
     checkLevel();
 
     friendshipText.textContent = friendship;
     levelText.textContent = level;
+    coinText.textContent = coins;
 
     hungerBar.value = hunger;
     happyBar.value = happiness;
     energyBar.value = energy;
 
-    if (hunger < 20) dialogue.textContent = "🍔 I'm hungry!";
-    else if (energy < 20) dialogue.textContent = "😴 I'm sleepy...";
-    else if (happiness < 20) dialogue.textContent = "😢 Play with me!";
-    else if (dialogue.textContent.includes("Level Up")) {}
-    else dialogue.textContent = "😊 I'm happy!";
+    if (hunger < 20) {
+        dialogue.textContent = "🍔 I'm hungry!";
+    }
+    else if (energy < 20) {
+        dialogue.textContent = "😴 I'm sleepy...";
+    }
+    else if (happiness < 20) {
+        dialogue.textContent = "😢 Please play with me!";
+    }
 
     saveGame();
 }
 
-function feedPet() {
+function feedPet(){
+
     friendship += 5;
+    coins += 5;
+
     hunger = Math.min(hunger + 20,100);
     happiness = Math.min(happiness + 5,100);
 
-    dialogue.textContent = "😋 Yum!";
-    updateBars();
+    dialogue.textContent = "😋 Yummy! +5 Coins";
+
+    updateGame();
+
 }
 
-function playPet() {
+function playPet(){
+
     friendship += 10;
+    coins += 8;
+
     happiness = Math.min(happiness + 15,100);
     energy = Math.max(energy - 10,0);
 
-    dialogue.textContent = "🎾 That was fun!";
-    updateBars();
+    dialogue.textContent = "🎾 That was fun! +8 Coins";
+
+    updateGame();
+
 }
 
-function petPet() {
+function petPet(){
+
     friendship += 3;
+    coins += 3;
+
     happiness = Math.min(happiness + 10,100);
 
-    dialogue.textContent = "🥰 I love pets!";
-    updateBars();
+    dialogue.textContent = "🥰 I love cuddles! +3 Coins";
+
+    updateGame();
+
 }
 
-function sleepPet() {
-    energy = 100;
+function sleepPet(){
+
     friendship += 2;
+    coins += 2;
 
-    dialogue.textContent = "💤 I had a nice nap!";
-    updateBars();
+    energy = 100;
+
+    dialogue.textContent = "💖 I feel refreshed! +2 Coins";
+
+    updateGame();
+
 }
 
-setInterval(() => {
-    hunger = Math.max(hunger - 2,0);
-    happiness = Math.max(happiness - 1,0);
-    energy = Math.max(energy - 1,0);
+setInterval(()=>{
 
-    updateBars();
+    hunger=Math.max(hunger-2,0);
+    happiness=Math.max(happiness-1,0);
+    energy=Math.max(energy-1,0);
+
+    updateGame();
+
 },5000);
 
-updateBars();
+updateGame();
