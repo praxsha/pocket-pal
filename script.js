@@ -1,4 +1,7 @@
 let friendship = 0;
+let hunger = 100;
+let happiness = 100;
+let energy = 100;
 
 const dialogue = document.getElementById("dialogue");
 const friendshipText = document.getElementById("friendship");
